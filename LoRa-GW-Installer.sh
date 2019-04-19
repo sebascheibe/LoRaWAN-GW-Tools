@@ -240,7 +240,7 @@ q
 EOEX'
 ;;
   2) echo "------ Setting up EU868 region ------"
-eval "sudo cp $localFolder/lora/packet_forwarder/lora_pkt_fwd/cfg/global_conf.json.PCB_E336.EU868.basic $localFolder/lora/packet_forwarder/lora_pkt_fwd/global_conf.json"
+eval "sudo cp $localFolder/lora/packet_forwarder/lora_pkt_fwd/cfg/global_conf.json.PCB_E286.EU868.basic $localFolder/lora/packet_forwarder/lora_pkt_fwd/global_conf.json"
 ;;
   *) echo "------ Input error. Not setting up Gateway region ------";;
 esac
