@@ -65,11 +65,11 @@ if !((${#TIME_INTERVALL}>0)) || ! [[ $TIME_INTERVALL =~ $time_interval_regex ]];
 fi
 
 # check 'CHANNELS' parameter
-if [ $BAND == "US915" ]; then
+if [[ $BAND == "US915" ]]; then
     # Only allow numeric values of '0' to '7' as valid input:
     band_regex='^[0-7]([,][0-7]|)+$'
 fi
-if [ $BAND == "EU868" ]; then
+if [[ $BAND == "EU868" ]]; then
     # Only allow numeric values of '0' to '1' as valid input:
     band_regex='^[0-1]([,][0-1]|)+$'
 fi
@@ -82,7 +82,7 @@ IFS=',' read -r -a channel_conf_array <<< "$CHANNELS"
 
 
 # print help information 
-if [ $need_help == "YES" ]; then
+if [[ $need_help == "YES" ]]; then
     echo ""
     echo "Running in " $localFolder
     echo "Please verify that the script runs inside the /lora/packet_forwarder/lora_pkt_fwd/ folder "
@@ -92,16 +92,20 @@ if [ $need_help == "YES" ]; then
     echo "  bash Continuous-Channel-Switch.sh [OPTIONS]"
     echo ""
     echo "[Options]: "
+    echo ""
     echo "  -t/--time_interval   -> Time interval between each channel switch. [NUM][s/m/h/d] (seconds, minutes, hours or days)"
     echo "                        -t=1m (for one minute interval)"
     echo "                        -t=3h (for three hour interval)"
     echo "                        --time_interval=7d (for seven days interval)"
+    echo ""
     echo "  -b/--band            -> LoRaWAN region / frequency band that the gateway is operating in."
     echo "                        -b=US915 (US915 region, 902-928MHz)"
     echo "                        -band=EU868 (EU868 region, 863-870MHz)"
+    echo ""
     echo "  -c/--channel_conf    -> List of channel configurations. '0': channels 0-7, '1': channels 8-15, ..."
     echo "                        -c=0,1,5,3"
     echo "                        --channel_conf=0,1,2,3,4,5,6,7"
+    echo ""
     echo "  -s/--gateway_service -> Service that runs packet_forwarder and needs to be restarted to effect"
     echo "                          the changes of new channel setup, default service name is 'lorawan-gateway' if no parameter is set."
     echo "                        -s=my_own_gateway_service"
@@ -115,7 +119,7 @@ fi
 while true; do
  for current_channel_conf in "${channel_conf_array[@]}"
  do    
-    if [ $BAND == "US915" ]; then
+    if [[ $BAND == "US915" ]]; then
         setup_freq_0=$((902700000+$current_channel_conf*1600000))
         setup_freq_1=$(($setup_freq_0+700000))
 
@@ -126,7 +130,7 @@ while true; do
 
         echo "Gateway configured for LoRa Channels $((8*$current_channel_conf)) ($(($setup_freq_0-400000))Hz) to $((8*$current_channel_conf + 7)) ($(($setup_freq_1+300000))Hz)."
     
-    elif [ $BAND == "EU868" ]; then
+    elif [[ $BAND == "EU868" ]]; then
         setup_freq_0=$((867500000+$current_channel_conf*1600000))
         setup_freq_1=$(($setup_freq_0+1000000))
 
