@@ -3,8 +3,8 @@
 echo " "
 echo "====== LoRa Gateway Channel Setup ======"
 echo "........ Version 1.1 2019-04-19 ........"
-echo "........ sebascheibe@github.com ........."
-echo "========================================="
+echo "........ sebascheibe@github.com ........"
+echo "========================================"
 echo ""
 
 # setup_id setup_freq_0 setup_freq_1 -> Channel_1 Channel_2 Channel_3 Channel_4 Channel_5 Channel_6 Channel_7 Channel_8

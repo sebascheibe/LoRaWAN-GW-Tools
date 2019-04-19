@@ -1,11 +1,10 @@
 #!/bin/bash
 
 echo " "
-echo "====== LoRa Gateway installer ======"
-echo "...... Version 1.0 2019-03-16 ......"
-echo "... created by Sebastian Scheibe ..."
-echo "......... ARGENISS SOFTWARE ........"
-echo "===================================="
+echo "======== LoRa Gateway installer ========"
+echo "........ Version 1.1 2019-04-19 ........"
+echo "........ sebascheibe@github.com ........"
+echo "========================================"
 echo " "
 
 pf_repository="https://github.com/Lora-net/packet_forwarder.git"
