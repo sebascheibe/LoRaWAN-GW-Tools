@@ -50,34 +50,34 @@ done
 
 if !((${#TIME_INTERVALL}>0)); then
       need_help=YES
-    fi 
+    fi
 
 if !((${#CHANNELS}>0)); then
-      need_help=YES  
+      need_help=YES
     fi
 
 if [ $need_help == "YES" ]; then
     echo "Running in " $localFolder
     echo "Please verify that the script runs inside the /lora/packet_forwarder/lora_pkt_fwd/ folder "
-    echo " where global_conf.json file and LoRa-GW-Channel-Setup.sh script are located!"
+    echo "where global_conf.json file is located!"
     echo " "
     echo "Usage: "
-    echo "bash continous_channel_switch.sh [OPTIONS]"
+    echo "  bash Continuous-Channel-Switch.sh [OPTIONS]"
     echo "[Options]: "
-    echo "  -t/--time_interval -> Time interval between each channel switch." 
+    echo "  -t/--time_interval -> Time interval between each channel switch."
     echo "                        -t=1m (for one minute interval)"
     echo "                        -t=3h (for three hour interval)"
     echo "                        --time_interval=7d (for seven days interval)"
-    echo "  -c/--channel_conf -> List of channel configurations. '0': channels 0-7, '1': channels 8-15, ..." 
+    echo "  -c/--channel_conf -> List of channel configurations. '0': channels 0-7, '1': channels 8-15, ..."
     echo "                        -c=0,1,5,3"
     echo "                        --channel_conf=0,1,2,3,4,5,6,7"
-    echo "  -s/--gateway_service -> Service that runs packet_forwarder and needs to be restarted to effect" 
-    echo "                          the changes of new channel setup, default service name is 'lorawan-gateway' if no parameter is set." 
+    echo "  -s/--gateway_service -> Service that runs packet_forwarder and needs to be restarted to effect"
+    echo "                          the changes of new channel setup, default service name is 'lorawan-gateway' if no parameter is set."
     echo "                        -s=my_own_gateway_service"
     echo "                        --gateway_service=my_own_gateway_service"
     echo "Examples: "
-    echo "sudo bash continous_channel_switch.sh -t=1d -c=0,1"
-    echo "sudo bash continuous_channel_switch.sh -t=1d -c=0,1,2,3 -s=my-own-gw-service"
+    echo "  sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1"
+    echo "  sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1,2,3 -s=my-own-gw-service"
     exit 1
 fi
 
@@ -86,16 +86,55 @@ IFS=',' read -r -a channel_conf_array <<< "$CHANNELS"
 while true; do
 for current_channel_conf in "${channel_conf_array[@]}"
 do
-    eval "sudo bash LoRa-GW-Channel-Setup.sh $current_channel_conf"
-    echo "Restarting Gateway service."
+    # eval "sudo bash LoRa-GW-Channel-Setup.sh $current_channel_conf"
+    # Only allow numeric values of '0' to '7' as valid input:
+    regex='^[0-7]$'
+    if [[ $current_channel_conf =~ $regex ]]; then
+        setup_id=$current_channel_conf
+
+    else
+    while :; do
+        echo "Choose LoRa Channel band:"
+        echo "<0> 902.3 to 903.7MHz"
+        echo "<1> 903.9 to 905.3MHz"
+        echo "<2> 905.5 to 906.9MHz"
+        echo "<3> 907.1 to 908.5MHz"
+        echo "<4> 908.7 to 910.1MHz"
+        echo "<5> 910.3 to 911.7MHz"
+        echo "<6> 911.9 to 913.3MHz"
+        echo "<7> 913.5 to 914.9MHz"
+      read -n1 -p "Please enter number (0-7):" setup_id
+      [[ $setup_id =~ ^[0-9]+$ ]] || { echo ""; echo "Enter a valid number!"; continue; }
+      if ((setup_id >= 0 && setup_id <= 7)); then
+        break
+      else
+        echo ""
+        echo "Number out of range, try again!"
+      fi
+    done
+    fi
+
+    setup_freq_0=$((902700000+$setup_id*1600000))
+    setup_freq_1=$(($setup_freq_0+700000))
+
+    # update line 9 with new setup_freq_0 parameter
+    sed -i '9s/.*/            "freq": '$setup_freq_0',/' global_conf.json
+    # update line 18 with new setup_freq_1 parameter
+    sed -i '18s/.*/            "freq": '$setup_freq_1',/' global_conf.json
+
+    echo "Gateway configured for LoRa Channels $((8*$setup_id)) ($(($setup_freq_0-400000))Hz) to $((8*$setup_id + 7)) ($(($setup_freq_1+300000))Hz)."
+
+    
     if !((${#GW_SERVICE}>0)); then
-      GW_SERVICE=lorawan-gateway  
-    fi 
+      GW_SERVICE=lorawan-gateway
+    fi
+    echo "DONE! sudo service $GW_SERVICE restart"
     eval "sudo service $GW_SERVICE restart"
     date
-    echo "Going to sleep for $TIME_INTERVALL."     
+    echo "Going to sleep for $TIME_INTERVALL."
     sleep $TIME_INTERVALL
     echo "Waking up :)"
+    echo ""
 done
 
 done
