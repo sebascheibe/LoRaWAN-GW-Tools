@@ -6,7 +6,7 @@ This script is used to install all necessary software packages on a Raspberry PI
 
 Run the script in command line:
 ```
-  	sudo bash  LoRa-GW-Installer.sh
+      sudo bash  LoRa-GW-Installer.sh
 ```
 
 The script creates a source folder “lora” inside the directory where the installer script is executed. Inside of that “lora” folder the official github projects “packet_forwarder” and “lora_gateway” are cloned and build before a configuration menu appears. Below an example setup:
@@ -16,11 +16,8 @@ The script creates a source folder “lora” inside the directory where the ins
 Choose LoRa Concentrator from list:
 
 <1> iC980A-SPI
-
 <2> RHF0M301-SPI
-
 <3> RAK831-SPI
-
 <4> Another one. Manual setup required.
 
 Please enter number: 2
@@ -52,9 +49,8 @@ Please enter number: 1
 
 After choosing the frequency band the corresponding global conf with the frequency patterns is copied from ./lora/packet_forwarder/lora_pkt_fwd/cfg/ to ./lora/packet_forwarder/lora_pkt_fwd/global_conf.json
 
-```
 Then enter the connection details to connect the Gateway to the LoRaWAN Network server:
-
+```
 IP/URL of LoRaWAN-Server:
 my-lorawan-server.com
 LoRaWAN-Server UP Port:
@@ -115,7 +111,8 @@ US915 BAND:
 | 7 | 913900000 | 914600000 | 913500000 | 913700000 | 913900000 | 914100000 | 914300000 | 914500000 | 914700000 | 914900000 |
 
 EU868 BAND:
-| CHANNEL_CONF | setup_freq_0 | setup_freq_1 | Channel_1 | Channel_2 | Channel_3 | Channel_4 | Channel_5 | Channel_6 | Channel_7 | Channel_8 |
+
+| CHANNEL_CONF | setup_freq_0 | setup_freq_1  | Channel_1 | Channel_2 | Channel_3 | Channel_4 | Channel_5 | Channel_6 | Channel_7 | Channel_8 |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | 0 | 867500000 | 868500000 | 867100000 | 867300000 | 867500000 | 867700000 | 867900000 | 868100000 | 868300000 | 868500000 |
 | 1 | 869100000 | 870100000 | 868700000 | 868900000 | 869100000 | 869300000 | 869500000 | 869700000 | 869900000 | 870100000 |
@@ -128,7 +125,7 @@ Please verify that the script runs inside the /lora/packet_forwarder/lora_pkt_fw
 
 Usage:
 ```
-	bash Continuous-Channel-Switch.sh [OPTIONS]
+      bash Continuous-Channel-Switch.sh [OPTIONS]
 
 [Options]:
 	-t/--time_interval
