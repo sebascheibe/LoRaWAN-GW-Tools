@@ -291,19 +291,6 @@ echo "WantedBy=multi-user.target" >> /etc/systemd/system/lorawan-gateway.service
 eval "sudo chmod +x /etc/systemd/system/lorawan-gateway.service"
 eval "sudo systemctl enable lorawan-gateway.service"
 echo " "
-echo "Does this LoRa Gateway have a 3G/4G module for mobile internet access?"
-
-read -n1 -p "y/Y or n/N: " module4g
-echo " "
-echo " "
-case $module4g in
-  y|Y) echo "------ Setting up 3G/4G module ------"
-echo "Please follow the instructions on https://bit.ly/2FgCB9A for setup.";;
-  n|N) echo "------ Not setting up 3G/4G module ------";;
-  *) echo "------ Input error. Not setting up 3G/4G module ------";;
-esac
-
-echo " "
 echo "========================================================================="
 echo " "
 echo " SETUP DONE! CONGRATULATIONS! :)"
