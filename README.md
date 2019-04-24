@@ -95,7 +95,8 @@ Examples:
           sudo bash LoRa-GW-Channel-Setup.sh 0 US915
           sudo bash LoRa-GW-Channel-Setup.sh 1 EU868
 ```
-Below you can find a table to identify the correct [CHANNEL_CONF] parameter used to setup a specific channel group:
+Below you can find a table to identify the correct [CHANNEL_CONF] parameter used to setup a specific channel group
+(__setup_freq_0__ and __setup_freq_1__ are the frequency parameters that are written in the global_conf.json file to setup the corresponding channel group.):
 
 US915 BAND:
 
@@ -154,3 +155,7 @@ Examples:
       sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
       sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
 ```
+
+## Authors
+
+* **Sebastian Scheibe** - *Initial work* - [sebascheibe](https://github.com/sebascheibe)
