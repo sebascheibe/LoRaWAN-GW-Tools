@@ -111,8 +111,8 @@ if [[ $need_help == "YES" ]]; then
     echo "                        -s=my_own_gateway_service"
     echo "                        --gateway_service=my_own_gateway_service"
     echo "Examples: "
-    echo "  sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1 -b=US915"
-    echo "  sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1,2,3 -s=my-own-gw-service -b=EU868"
+    echo "  sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915"
+    echo "  sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868"
     exit 1
 fi
 
