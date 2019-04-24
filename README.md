@@ -2,7 +2,7 @@
 
 ## LoRa-GW-Installer.sh ##
 
-This script is used to install all necessary software packages on a Raspberry PI for building up a LoRaWAN Gateway in conjunction with a connected LoRa Concentrator (iC980-SPI, RHF0M301-SPI, RAK831-SPI or any other by manual setup).
+This script is used to install all necessary software packages on a Raspberry PI for building up a LoRaWAN Gateway in conjunction with a connected LoRa Concentrator (iC980-SPI, RHF0M301-SPI, RAK831-SPI or any other by manual setup). If there was any wrong input you can re run the script to update any settings. 
 
 Run the script in command line:
 ```
@@ -126,7 +126,7 @@ Please verify that the script runs inside the /lora/packet_forwarder/lora_pkt_fw
 
 Usage:
 ```
-      bash Continuous-Channel-Switch.sh [OPTIONS]
+      sudo bash Continuous-Channel-Switch.sh [OPTIONS]
 
 [Options]:
 	-t/--time_interval
