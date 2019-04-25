@@ -90,6 +90,14 @@ This script is used to change the channel configuration the LoRa Gateway is usin
 
 Run it specifying the [CHANNEL_CONF] as well as the [BAND_REGION] parameter.
 
+Usage:
+```
+      sudo bash LoRa-GW-Channel-Setup.sh [CHANNEL_CONF] [BAND_REGION]
+      
+ [CHANNEL_CONF]      ID of channel group, see tables below.
+ [BAND_REGION]       US915 or EU868 (currently only support for US915 and EU868 region)
+      
+```
 Examples: 
 ```
           sudo bash LoRa-GW-Channel-Setup.sh 0 US915
