@@ -9,7 +9,7 @@ Run the script in command line:
       sudo bash  LoRa-GW-Installer.sh
 ```
 
-The script creates a source folder “lora” inside the directory where the installer script is executed. Inside of that “lora” folder the official github projects “packet_forwarder” and “lora_gateway” are cloned and build before a configuration menu appears. Below an example setup:
+The script creates a source folder “lora” inside the directory where the installer script is executed. Inside of that “lora” folder the official github projects [packet_forwarder](https://github.com/Lora-net/packet_forwarder) and [lora_gateway](https://github.com/Lora-net/lora_gateway) are cloned and build before a configuration menu appears. Below an example setup:
  ```
 ------ Configuration ------
  
