@@ -51,7 +51,7 @@ if [[ $1 =~ $channel_regex ]]; then
 else
   if [[ $2 == 'US915' ]]; then
     while :; do
-    
+
         echo "Choose LoRa Channel band:"
         echo "<0> 902.3 to 903.7MHz"
         echo "<1> 903.9 to 905.3MHz"
@@ -72,7 +72,7 @@ else
     done
   elif [[ $2 == 'EU868' ]]; then
     while :; do
-    
+
         echo "Choose LoRa Channel band:"
         echo "<0> 867.1 to 868.5MHz"
         echo "<1> 868.7 to 870.1MHz"
@@ -100,13 +100,11 @@ echo ""
 echo "Setting up global_conf.json with following frequency parameters: $setup_freq_0 and $setup_freq_1"
 
 # update line 9 with new setup_freq_0 parameter, IMPORTANT: adjust line number for E336.EU868 to 20
-sed -i '9s/.*/            "freq": '$setup_freq_0',/' global_conf.json
+sed -i '9s/.*/            "freq": '$setup_freq_0',/' $localFolder/global_conf.json
 # update line 18 with new setup_freq_1 parameter, IMPORTANT: adjust line number for E336.EU868 to 30
-sed -i '18s/.*/            "freq": '$setup_freq_1',/' global_conf.json
+sed -i '18s/.*/            "freq": '$setup_freq_1',/' $localFolder/global_conf.json
 
 echo "Gateway configured for LoRa Channels $((8*$setup_id)) ($(($setup_freq_0-400000))Hz) to $((8*$setup_id + 7)) ($(($setup_freq_1+300000))Hz)."
 
 echo ""
 echo "DONE! Please restart Gateway packet-forwarder to effect changes."
-
-

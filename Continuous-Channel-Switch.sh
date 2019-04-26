@@ -71,7 +71,7 @@ elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_h_regex ]]; 
       time_interval_in_s=$(( ${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}*60*60))
 elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_d_regex ]]; then
       time_interval_in_s=$(( ${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}*60*60*24))
-else 
+else
       echo "[ERROR]: Missing or wrong time interval parameter -t"
       need_help=YES
 fi
@@ -93,7 +93,7 @@ if ! [[ $CHANNELS =~ $band_regex ]]; then
 IFS=',' read -r -a channel_conf_array <<< "$CHANNELS"
 
 
-# print help information 
+# print help information
 if [[ $need_help == "YES" ]]; then
     echo ""
     echo "Running in " $localFolder
@@ -130,7 +130,7 @@ fi
 
 while true; do
  for current_channel_conf in "${channel_conf_array[@]}"
- do    
+ do
     # parameter used to measure time needed to update configuration files.
     start_time=$(($(date +%s%N)/1000000))
 
@@ -144,7 +144,7 @@ while true; do
         sed -i '9s/.*/            "freq": '$setup_freq_0',/' global_conf.json
         # update line 18 with new setup_freq_1 parameter
         sed -i '18s/.*/            "freq": '$setup_freq_1',/' global_conf.json
-    
+
     elif [[ $BAND == "EU868" ]]; then
         setup_freq_0=$((867500000+$current_channel_conf*1600000))
         setup_freq_1=$(($setup_freq_0+1000000))
@@ -155,7 +155,7 @@ while true; do
         # update line 18 with new setup_freq_1 parameter for E286.EU868 global config, IMPORTANT: adjust line number for E336.EU868 to 30
         sed -i '18s/.*/            "freq": '$setup_freq_1',/' global_conf.json
     fi
-    
+
     if !((${#GW_SERVICE}>0)); then
       GW_SERVICE=lorawan-gateway
     fi
@@ -163,7 +163,7 @@ while true; do
     eval "sudo service $GW_SERVICE restart"
     date
     echo "Sleeping for $TIME_INTERVAL."
-    
+
     # parameter used to measure time needed to update configuration files.
     stop_time=$(($(date +%s%N)/1000000))
     # Correct time drift that is caused by updating configuration files. 

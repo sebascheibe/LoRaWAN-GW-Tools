@@ -67,7 +67,7 @@ elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_h_regex ]]; 
       cronjob_schedule="h"
 elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_d_regex ]]; then
       cronjob_schedule="d"
-else 
+else
       echo "[ERROR]: Missing or wrong time interval parameter -t"
       need_help=YES
 fi
@@ -133,33 +133,33 @@ time_interval=${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}
 if !((${#GW_SERVICE}>0)); then
       GW_SERVICE=lorawan-gateway
     fi
-    
+
 echo "Add new cron jobs:"
 for current_channel_conf in "${channel_conf_array[@]}"
  do
-   croncmd="/usr/bin/sudo -H $localFolder/LoRa-GW-Channel-Setup.sh $current_channel_conf $BAND >> /dev/null 2>&1 && sudo service $GW_SERVICE restart"
+   croncmd="/bin/bash $localFolder/LoRa-GW-Channel-Setup.sh $current_channel_conf $BAND && sudo service $GW_SERVICE restart"
 
    case $cronjob_schedule in
-     m) cron_timer="*/$(( time_interval*cronjobs_total))+$(( time_interval*cronjob_index )) * * * * "
+     m) cron_timer="$(( time_interval*cronjob_index ))-59/$(( time_interval*cronjobs_total )) * * * * "
    ;;
-     h) cron_timer="* */$(( time_interval*cronjobs_total))+$(( time_interval*cronjob_index )) * * * "
+     h) cron_timer="* $(( time_interval*cronjob_index ))-23/$(( time_interval*cronjobs_total )) * * * "
    ;;
-     d) cron_timer="* * */$(( time_interval*cronjobs_total))+$(( time_interval*cronjob_index )) * * "
+     d) cron_timer="* * * * $(( time_interval*cronjob_index ))-7/$(( time_interval*cronjobs_total )) "
    ;;
      *) echo "------ Input error. No Schedule? ------";;
    esac
-  
+
  cronjob="$cron_timer $croncmd"
- # print out new crontab entry 
+ # print out new crontab entry
  echo "$cronjob"
  cat <(crontab -l) <(echo "$cronjob") | crontab -
 
  cronjob_index=$(( cronjob_index+1 ))
- 
+
  done
 
 echo ""
 echo "Done! To review, edit or delete created cron jobs run:"
 echo ""
 echo "~$ sudo crontab -e"
-echo "" 
+echo ""
