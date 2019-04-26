@@ -1,10 +1,10 @@
 #!/bin/bash
 
 echo " "
-echo "=== LoRa GW Continuous Channel Switch ==="
-echo "........ Version 1.1 2019-04-19 ........."
-echo "........ sebascheibe@github.com ........."
-echo "========================================="
+echo "===== LoRa GW Cronjob Channel Switch ====="
+echo "........ Version 1.1 2019-04-19 .........."
+echo "........ sebascheibe@github.com .........."
+echo "=========================================="
 echo ""
 
 # US915 BAND:
@@ -57,20 +57,16 @@ if [[ $BAND != "US915" && $BAND != "EU868" ]]; then
 fi
 
 # check 'TIME_INTERVAL' parameter
-time_interval_s_regex='^[0-9]+[s]$'
 time_interval_m_regex='^[0-9]+[m]$'
 time_interval_h_regex='^[0-9]+[h]$'
 time_interval_d_regex='^[0-9]+[d]$'
-time_interval_in_s=0
 
-if ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_s_regex ]]; then
-      time_interval_in_s=${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}
-elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_m_regex ]]; then
-      time_interval_in_s=$(( ${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}*60 ))
+if ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_m_regex ]]; then
+      cronjob_schedule="m"
 elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_h_regex ]]; then
-      time_interval_in_s=$(( ${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}*60*60))
+      cronjob_schedule="h"
 elif ((${#TIME_INTERVAL}>0)) && [[ $TIME_INTERVAL =~ $time_interval_d_regex ]]; then
-      time_interval_in_s=$(( ${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}*60*60*24))
+      cronjob_schedule="d"
 else 
       echo "[ERROR]: Missing or wrong time interval parameter -t"
       need_help=YES
@@ -101,11 +97,11 @@ if [[ $need_help == "YES" ]]; then
     echo "where global_conf.json file is located!"
     echo " "
     echo "Usage: "
-    echo "  bash Continuous-Channel-Switch.sh [OPTIONS]"
+    echo "  sudo bash Cronjob-Channel-Switch.sh [OPTIONS]"
     echo ""
     echo "[Options]: "
     echo ""
-    echo "  -t/--time_interval   -> Time interval between each channel switch. [NUM][s/m/h/d] (seconds, minutes, hours or days)"
+    echo "  -t/--time_interval   -> Time interval between each channel switch. [NUM][m/h/d] (minutes, hours or days)"
     echo "                        -t=1m (for one minute interval)"
     echo "                        -t=3h (for three hour interval)"
     echo "                        --time_interval=7d (for seven days interval)"
@@ -123,55 +119,47 @@ if [[ $need_help == "YES" ]]; then
     echo "                        -s=my_own_gateway_service"
     echo "                        --gateway_service=my_own_gateway_service"
     echo "Examples: "
-    echo "  sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1 -b=US915"
-    echo "  sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1,2,3 -s=my-own-gw-service -b=EU868"
+    echo "  sudo bash Cronjob-Channel-Switch.sh -t=1d -c=0,1 -b=US915"
+    echo "  sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1,2,3 -s=my-own-gw-service -b=EU868"
     exit 1
 fi
 
-while true; do
- for current_channel_conf in "${channel_conf_array[@]}"
- do    
-    # parameter used to measure time needed to update configuration files.
-    start_time=$(($(date +%s%N)/1000000))
+localFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 
-    if [[ $BAND == "US915" ]]; then
-        setup_freq_0=$((902700000+$current_channel_conf*1600000))
-        setup_freq_1=$(($setup_freq_0+700000))
+cronjob_index=0
+cronjobs_total=${#channel_conf_array[@]}
+time_interval=${TIME_INTERVAL:0:$(( ${#TIME_INTERVAL}-1 ))}
 
-        echo "Configuring Gateway for LoRa Channels $((8*$current_channel_conf)) ($(($setup_freq_0-400000))Hz) to $((8*$current_channel_conf + 7)) ($(($setup_freq_1+300000))Hz)."
-
-        # update line 9 with new setup_freq_0 parameter
-        sed -i '9s/.*/            "freq": '$setup_freq_0',/' global_conf.json
-        # update line 18 with new setup_freq_1 parameter
-        sed -i '18s/.*/            "freq": '$setup_freq_1',/' global_conf.json
-    
-    elif [[ $BAND == "EU868" ]]; then
-        setup_freq_0=$((867500000+$current_channel_conf*1600000))
-        setup_freq_1=$(($setup_freq_0+1000000))
-
-        echo "Configuring Gateway for LoRa Channels $((8*$current_channel_conf)) ($(($setup_freq_0-400000))Hz) to $((8*$current_channel_conf + 7)) ($(($setup_freq_1))Hz)."
-        # update line 9 with new setup_freq_0 parameter for E286.EU868 global config, IMPORTANT: adjust line number for E336.EU868 to 20
-        sed -i '9s/.*/            "freq": '$setup_freq_0',/' global_conf.json
-        # update line 18 with new setup_freq_1 parameter for E286.EU868 global config, IMPORTANT: adjust line number for E336.EU868 to 30
-        sed -i '18s/.*/            "freq": '$setup_freq_1',/' global_conf.json
-    fi
-    
-    if !((${#GW_SERVICE}>0)); then
+if !((${#GW_SERVICE}>0)); then
       GW_SERVICE=lorawan-gateway
     fi
-    echo "DONE! sudo service $GW_SERVICE restart"
-    eval "sudo service $GW_SERVICE restart"
-    date
-    echo "Sleeping for $TIME_INTERVAL."
     
-    # parameter used to measure time needed to update configuration files.
-    stop_time=$(($(date +%s%N)/1000000))
-    # Correct time drift that is caused by updating configuration files. 
-    # For that wait the time needed to complete 1 second.
-    difference=$(( stop_time - start_time + 21 )) # 21 additional ms as these correction calculations also cause some delay. To eliminate any kind of time shift the best way would be creating cron jobs that are scheduled exactly to execute the LoRa-GW-Channel-Setup.sh script and restarting the GW service / packet-forwarder afterwards.
-    sleep "0.$(( 1000-difference ))"
-    # ... and let the script sleep for [TIME_INTERVAL] minus 1 second (that was already used to correct the time drift).
-    sleep $(( time_interval_in_s-1 ))
-    echo ""
-  done
-done
+echo "Add new cron jobs:"
+for current_channel_conf in "${channel_conf_array[@]}"
+ do
+   croncmd="/usr/bin/sudo -H $localFolder/LoRa-GW-Channel-Setup.sh $current_channel_conf $BAND >> /dev/null 2>&1 && sudo service $GW_SERVICE restart"
+
+   case $cronjob_schedule in
+     m) cron_timer="*/$(( time_interval*cronjobs_total))+$(( time_interval*cronjob_index )) * * * * "
+   ;;
+     h) cron_timer="* */$(( time_interval*cronjobs_total))+$(( time_interval*cronjob_index )) * * * "
+   ;;
+     d) cron_timer="* * */$(( time_interval*cronjobs_total))+$(( time_interval*cronjob_index )) * * "
+   ;;
+     *) echo "------ Input error. No Schedule? ------";;
+   esac
+  
+ cronjob="$cron_timer $croncmd"
+ # print out new crontab entry 
+ echo "$cronjob"
+ cat <(crontab -l) <(echo "$cronjob") | crontab -
+
+ cronjob_index=$(( cronjob_index+1 ))
+ 
+ done
+
+echo ""
+echo "Done! To review, edit or delete created cron jobs run:"
+echo ""
+echo "~$ sudo crontab -e"
+echo "" 
