@@ -9,7 +9,7 @@ Run the script in command line:
       sudo bash  LoRa-GW-Installer.sh
 ```
 
-The script creates a source folder “lora” inside the directory where the installer script is executed. Inside of that “lora” folder the official github projects “packet_forwarder” and “lora_gateway” are cloned and build before a configuration menu appears. Below an example setup:
+The script creates a source folder “lora” inside the directory where the installer script is executed. Inside of that “lora” folder the official github projects [packet_forwarder](https://github.com/Lora-net/packet_forwarder) and [lora_gateway](https://github.com/Lora-net/lora_gateway) are cloned and build before a configuration menu appears. Below an example setup:
  ```
 ------ Configuration ------
  
@@ -90,6 +90,14 @@ This script is used to change the channel configuration the LoRa Gateway is usin
 
 Run it specifying the [CHANNEL_CONF] as well as the [BAND_REGION] parameter.
 
+Usage:
+```
+      sudo bash LoRa-GW-Channel-Setup.sh [CHANNEL_CONF] [BAND_REGION]
+      
+ [CHANNEL_CONF]      ID of channel group, see tables below.
+ [BAND_REGION]       US915 or EU868 (currently only support for US915 and EU868 region)
+      
+```
 Examples: 
 ```
           sudo bash LoRa-GW-Channel-Setup.sh 0 US915
