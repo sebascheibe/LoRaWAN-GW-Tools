@@ -1,5 +1,6 @@
 # LoRaWAN-GW-Tools
 
+
 ## LoRa-GW-Installer.sh ##
 
 This script is used to install all necessary software packages on a Raspberry PI for building up a LoRaWAN Gateway in conjunction with a connected LoRa Concentrator (iC980-SPI, RHF0M301-SPI, RAK831-SPI or any other by manual setup). If there was any wrong input you can re run the script to update any settings. 
@@ -84,6 +85,8 @@ Created symlink /etc/systemd/system/multi-user.target.wants/lorawan-gateway.serv
 =========================================================================
 ```
 
+
+
 ## LoRa-GW-Channel-Setup.sh ##
 
 This script is used to change the channel configuration the LoRa Gateway is using for listening to LoRaWAN devices. Copy the script to the /lora/packet_forwarder/lora_pkt_fwd/ folder where global_conf.json file is located.
@@ -127,6 +130,8 @@ EU868 BAND:
 | 1 | 869100000 | 870100000 | 868700000 | 868900000 | 869100000 | 869300000 | 869500000 | 869700000 | 869900000 | 870100000 |
 
 
+
+
 ## Continuous-Channel-Switch.sh ##
 
 This script is used to modify the channel setup periodically for scanning purposes. 
@@ -164,6 +169,8 @@ Examples:
       sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
 ```
 
+
+
 ## Cronjob-Channel-Switch.sh ##
 
 This script is used to create cronjobs to schedule channel configuration updates on the gateway. Purpose of that solution is to avoid time drifts that occur when using the Continuous-Channel-Switch.sh script, it's just a minor drift of milliseconds per channel update, but if you plan to scan for a larger time period with lots of channel switches then this drift could cause problems. So setting up cronjobs is a nice way to handle that issue.
@@ -197,8 +204,8 @@ Usage:
 ```  
 Examples:
 ```
-      sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
-      sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
+      sudo bash Cronjob-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
+      sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
 ```
 
 
