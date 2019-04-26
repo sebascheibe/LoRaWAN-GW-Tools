@@ -173,8 +173,10 @@ Examples:
 
 ## Cronjob-Channel-Switch.sh ##
 
-This script is used to create cronjobs to schedule channel configuration updates on the gateway. Purpose of that solution is to avoid time drifts that occur when using the Continuous-Channel-Switch.sh script, it's just a minor drift of milliseconds per channel update, but if you plan to scan for a larger time period with lots of channel switches then this drift could cause problems. So setting up cronjobs is a nice way to handle that issue.
+This script is used to create cronjobs to schedule channel configuration updates on the gateway. Purpose of that solution is to avoid time drifts that occur when using the Continuous-Channel-Switch.sh script, it's just a minor drift of milliseconds per channel update, but if you plan to scan for a larger time period with lots of channel switches then this drift could cause problems. So setting up cronjobs is a nice way to handle that issue. 
+Furthermore using cronjobs, scheduling channel switches continues after a reboot and you don't have to worry about restarting a script like when using the Continuous-Channel-Switch.sh script.
 Please verify that the script runs inside the /lora/packet_forwarder/lora_pkt_fwd/ folder where global_conf.json file is located and that you also have the __LoRa-GW-Channel-Setup.sh__ script in that folder as it's used to update the channel configuration when running the cronjob!
+__Important: When running that script, previous crontab entries persist and aren't deleted. So when running that script multiple times, make sure to remove old unused entries.__
 
 Usage:
 ```
