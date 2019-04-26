@@ -207,6 +207,46 @@ Examples:
       sudo bash Cronjob-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
       sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
 ```
+Examples:
+
+Configurating Gateway to switch between channel groups 0,1,2,3 every 15 minutes for US915 band:
+```
+pi@IoT_LoRaWAN_Gateway_0:~/lora/packet_forwarder/lora_pkt_fwd $ sudo bash Cronjob-Channel-Switch.sh -t=15m -c=0,1,2,3 -b=US915
+ 
+===== LoRa GW Cronjob Channel Switch =====
+........ Version 1.1 2019-04-19 ..........
+........ sebascheibe@github.com ..........
+==========================================
+
+Add new cron jobs:
+0-59/60 * * * *  /bin/bash /home/pi/lora/packet_forwarder/lora_pkt_fwd/LoRa-GW-Channel-Setup.sh 0 US915 && sudo service lorawan-gateway restart
+15-59/60 * * * *  /bin/bash /home/pi/lora/packet_forwarder/lora_pkt_fwd/LoRa-GW-Channel-Setup.sh 1 US915 && sudo service lorawan-gateway restart
+30-59/60 * * * *  /bin/bash /home/pi/lora/packet_forwarder/lora_pkt_fwd/LoRa-GW-Channel-Setup.sh 2 US915 && sudo service lorawan-gateway restart
+45-59/60 * * * *  /bin/bash /home/pi/lora/packet_forwarder/lora_pkt_fwd/LoRa-GW-Channel-Setup.sh 3 US915 && sudo service lorawan-gateway restart
+
+Done! To review, edit or delete created cron jobs run:
+
+~$ sudo crontab -e
+
+```
+Configurating Gateway to switch between channel groups 0 and 1 every 5 hours for EU868 band:
+```
+pi@IoT_LoRaWAN_Gateway_0:~/lora/packet_forwarder/lora_pkt_fwd $ sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -b=EU868
+ 
+===== LoRa GW Cronjob Channel Switch =====
+........ Version 1.1 2019-04-19 ..........
+........ sebascheibe@github.com ..........
+==========================================
+
+Add new cron jobs:
+* 0-23/10 * * *  /bin/bash /home/pi/lora/packet_forwarder/lora_pkt_fwd/LoRa-GW-Channel-Setup.sh 0 EU868 && sudo service lorawan-gateway restart
+* 5-23/10 * * *  /bin/bash /home/pi/lora/packet_forwarder/lora_pkt_fwd/LoRa-GW-Channel-Setup.sh 1 EU868 && sudo service lorawan-gateway restart
+
+Done! To review, edit or delete created cron jobs run:
+
+~$ sudo crontab -e
+
+```
 
 
 ## Authors
