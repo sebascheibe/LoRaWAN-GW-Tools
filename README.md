@@ -1,5 +1,6 @@
 # LoRaWAN-GW-Tools
 
+
 ## LoRa-GW-Installer.sh ##
 
 This script is used to install all necessary software packages on a Raspberry PI for building up a LoRaWAN Gateway in conjunction with a connected LoRa Concentrator (iC980-SPI, RHF0M301-SPI, RAK831-SPI or any other by manual setup). If there was any wrong input you can re run the script to update any settings. 
@@ -84,6 +85,8 @@ Created symlink /etc/systemd/system/multi-user.target.wants/lorawan-gateway.serv
 =========================================================================
 ```
 
+
+
 ## LoRa-GW-Channel-Setup.sh ##
 
 This script is used to change the channel configuration the LoRa Gateway is using for listening to LoRaWAN devices. Copy the script to the /lora/packet_forwarder/lora_pkt_fwd/ folder where global_conf.json file is located.
@@ -127,6 +130,8 @@ EU868 BAND:
 | 1 | 869100000 | 870100000 | 868700000 | 868900000 | 869100000 | 869300000 | 869500000 | 869700000 | 869900000 | 870100000 |
 
 
+
+
 ## Continuous-Channel-Switch.sh ##
 
 This script is used to modify the channel setup periodically for scanning purposes. 
@@ -163,6 +168,46 @@ Examples:
       sudo bash Continuous-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
       sudo bash Continuous-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
 ```
+
+
+
+## Cronjob-Channel-Switch.sh ##
+
+This script is used to create cronjobs to schedule channel configuration updates on the gateway. Purpose of that solution is to avoid time drifts that occur when using the Continuous-Channel-Switch.sh script, it's just a minor drift of milliseconds per channel update, but if you plan to scan for a larger time period with lots of channel switches then this drift could cause problems. So setting up cronjobs is a nice way to handle that issue.
+Please verify that the script runs inside the /lora/packet_forwarder/lora_pkt_fwd/ folder where global_conf.json file is located and that you also have the __LoRa-GW-Channel-Setup.sh__ script in that folder as it's used to update the channel configuration when running the cronjob!
+
+Usage:
+```
+      sudo bash Cronjob-Channel-Switch.sh [OPTIONS]
+
+[Options]:
+	-t/--time_interval
+		Time interval between each channel switch. [NUM][m/h/d] (minutes, hours or days)
+        	-t=1m (for one minute interval)
+                -t=3h (for three hour interval)
+                --time_interval=7d (for seven days interval)
+
+	 -b/--band
+		LoRaWAN region / frequency band that the gateway is operating in.
+                -b=US915 (US915 region, 902-928MHz)
+                -band=EU868 (EU868 region, 863-870MHz)
+
+	 -c/--channel_conf
+		List of channel configurations. '0': channels 0-7, '1': channels 8-15, ...
+                -c=0,1,5,3
+                --channel_conf=0,1,2,3,4,5,6,7
+
+	 -s/--gateway_service
+		Service that runs packet_forwarder and needs to be restarted to effect the changes of new channel setup, default service name is 'lorawan-gateway' if no parameter is set.
+                -s=my_own_gateway_service
+                --gateway_service=my_own_gateway_service
+```  
+Examples:
+```
+      sudo bash Cronjob-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
+      sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
+```
+
 
 ## Authors
 
