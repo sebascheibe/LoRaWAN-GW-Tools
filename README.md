@@ -207,11 +207,11 @@ Examples:
       sudo bash Cronjob-Channel-Switch.sh -t=1d -c=0,1,2,3 -b=US915
       sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -s=my-own-gw-service -b=EU868
 ```
-Examples:
+Examples with console output:
 
 Configurating Gateway to switch between channel groups 0,1,2,3 every 15 minutes for US915 band:
 ```
-pi@IoT_LoRaWAN_Gateway_0:~/lora/packet_forwarder/lora_pkt_fwd $ sudo bash Cronjob-Channel-Switch.sh -t=15m -c=0,1,2,3 -b=US915
+pi@LoRaWAN_GW:~/lora/packet_forwarder/lora_pkt_fwd $ sudo bash Cronjob-Channel-Switch.sh -t=15m -c=0,1,2,3 -b=US915
  
 ===== LoRa GW Cronjob Channel Switch =====
 ........ Version 1.1 2019-04-19 ..........
@@ -231,7 +231,7 @@ Done! To review, edit or delete created cron jobs run:
 ```
 Configurating Gateway to switch between channel groups 0 and 1 every 5 hours for EU868 band:
 ```
-pi@IoT_LoRaWAN_Gateway_0:~/lora/packet_forwarder/lora_pkt_fwd $ sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -b=EU868
+pi@LoRaWAN_GW:~/lora/packet_forwarder/lora_pkt_fwd $ sudo bash Cronjob-Channel-Switch.sh -t=5h -c=0,1 -b=EU868
  
 ===== LoRa GW Cronjob Channel Switch =====
 ........ Version 1.1 2019-04-19 ..........
